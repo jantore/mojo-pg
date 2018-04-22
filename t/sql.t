@@ -157,6 +157,10 @@ is_deeply \@sql,
 is_deeply \@sql,
   ['SELECT * FROM "foo" JOIN "bar" ON ("bar"."foo_id" = "foo"."id")'],
   'right query';
+@sql = $abstract->select(['foo', ['bar', foo_id => {'>=' => 'id'}]]);
+is_deeply \@sql,
+  ['SELECT * FROM "foo" JOIN "bar" ON ("bar"."foo_id" >= "foo"."id")'],
+  'right query';
 @sql = $abstract->select(['foo', ['bar', 'foo.id' => 'bar.foo_id']]);
 is_deeply \@sql,
   ['SELECT * FROM "foo" JOIN "bar" ON ("foo"."id" = "bar"."foo_id")'],

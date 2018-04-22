@@ -166,11 +166,13 @@ sub _table {
     puke 'join must be in the form [$table, $fk => $pk]' if @$join < 3;
     my $type = @$join > 3 ? shift @$join : '';
     my ($name, $fk, $pk) = @$join;
+    my $op;
+    ($op, $pk) = ref $pk eq 'HASH' ? %$pk : ('=', $pk);
     $table
       .= $self->_sqlcase($type =~ /^-(.+)$/ ? " $1 join " : ' join ')
       . $self->_quote($name)
       . $self->_sqlcase(' on ') . '('
-      . $self->_quote(index($fk, $sep) > 0 ? $fk : "$name.$fk") . ' = '
+      . $self->_quote(index($fk, $sep) > 0 ? $fk : "$name.$fk") . " $op "
       . $self->_quote(index($pk, $sep) > 0 ? $pk : "$table[0].$pk") . ')';
   }
 
